@@ -14,9 +14,9 @@
             <div class="col-sm-6 col-md-6">
                 <ul class="nav navbar-nav">
                     <li>
-                        <form role="similarArtists" class="navbar-form" id="similarArtists">
+                        <form role="artistSearch" class="navbar-form" id="artistSearch">
                             <div class="form-group">
-                                <input type="text" value="snowpatrol" placeholder="Search for Artist" class="form-control" name="similarArtists">
+                                <input type="text" value="snowpatrol" placeholder="Search for Artist" class="form-control" id='searchBar' name="artistSearch">
                             </div>
                             <button class="btn btn-default" type="submit">Search</button>
                         </form>
@@ -46,7 +46,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-6">
         <div class="panel panel-default scrollable-panel">
             <div class="panel-heading">Search Results</div>
             <table id="results" class="table table-striped table-hover">
@@ -60,31 +60,14 @@
             </table>
         </div>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-6">
         <div class="panel panel-default scrollable-panel" style="max-height: 300px;">
             <div class="panel-heading" id="name">Details</div>
-            <table id="song_table" class="table table-striped table-hover">
+            <table id="similar_table" class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th>Song</th>
-                    <th>Year</th>
-                   
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
-        <div class="col-md-7">
-        <div class="panel panel-default scrollable-panel" style="max-height: 280px;">
-            <div class="panel-heading" id="name">Details</div>
-            <table id="album_table" class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <th>Album</th>
-                    
-                   
+                    <th>Similar Artist</th>
+                                     
                 </tr>
                 </thead>
                 <tbody>
@@ -106,60 +89,50 @@
 
 <script type="text/javascript">
     $(function () {
-  function showArtist(name) {
-   $.get("http://localhost:8080/artist/" + encodeURIComponent(name),
-                    function (data) {
-                    song_data=data[0][0].songs;
-                    album_data= data[1][0].albums;
-                        var t = $("table#song_table tbody").empty();
-                        if (!data || data.length == 0) return;
-                        song_data.forEach(function (row) {
-                            var song = row;
-                            $("<tr><td class='song'>" + song.title + "</td><td>" + song.year + "</td></tr>").appendTo(t)
-                                    .click(function() { window.open("/songs/" + ($(this).find("td.song").text()) );
 
-                                })});
-
-
-                        var r = $("table#album_table tbody").empty();
-                        if (!song_data) return;
-                        $("#name").text(data.name);
-                        var $list = $("#crew").empty();
-                        album_data.forEach(function (album) {
-       
-                    $("<tr><td class='album'>" + album.album + "</td></tr>").appendTo(r)
-                                    .click(function() {window.open("/albums/" + ($(this).find("td.album").text())); })                     
-                        });
-                    }, "json");
-            return false;
-  }
-           
-        
-        
-
-            function similarArtists() {
-            var query=$("#similarArtists").find("input[name=similarArtists]").val();
-            query = query.split('+').join(' ');
-            $.get("http://localhost:8080/simArtists/" + encodeURIComponent(query),
+            function similarArtists(artistName) {
+            $.get("http://localhost:8080/simArtists/" + encodeURIComponent(artistName),
                     function (data) {
                         data = data[0].similar_artists;
-                        var t = $("table#results tbody").empty();
+                        var t = $("table#similar_table tbody").empty();
                         if (!data || data.length == 0) return;
                         data.forEach(function (row) {
                             
                             $("<tr><td class='artist'>" + row.artist.properties.name.val + "</td>").appendTo(t)
-                                    .click(function() { showArtist($(this).find("td.artist").text());
+                                    .click(function() { window.open("/artists/" + ($(this).find("td.artist").text()));
                                         
 
                                 })
                         });
-                        showArtist(data[0].song.name);
                     }, "json");
             return false;
         }
-        $("#similarArtists").submit(similarArtists);
-        similarArtists();
+        
+                function artistSearch() {
+            var query=$("#artistSearch").find("input[name=artistSearch]").val();
+           query = query.split('+').join(' ');
+            query = query.split('%28').join('(');
+            query = query.split('%29').join(')');   
+            document.getElementById('searchBar').value = query         
+            $.get("http://localhost:8080/artistSearch?q=" + encodeURIComponent(query),
+                    function (data) {
+                        var t = $("table#results tbody").empty();
+                        if (!data || data.length == 0) return;
+                        data.forEach(function (row) {
+                            var artist = row.artist;
+                            $("<tr><td class='artist'>" + artist.name + "</td></tr>").appendTo(t)
+                                    .click(function() { similarArtists($(this).find("td.artist").text());
+                                    					
+                                    })
+                        });
+
+                    }, "json");
+            return false;
+        }
+        $("#artistSearch").submit(artistSearch);
+        artistSearch();
     })
+        
 </script>
 
 <script type="text/javascript">

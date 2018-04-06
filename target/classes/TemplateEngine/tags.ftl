@@ -67,7 +67,7 @@
         </div>
     </div>
 <div class="col-md-6">
-        <div class="panel panel-default" <div class="panel panel-default" style="max-height: 600px;overflow: scroll;">
+        <div class="panel panel-default scrollable-panel" <div class="panel panel-default scrollable-panel" style="max-height: 600px;overflow: scroll;">
             <div class="panel-heading">Search Results
             <div class="btn-group" style="position: relative;left: 50%;">
                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Data to Download<span class="caret"></span></button>
@@ -103,7 +103,7 @@
             </table>
         </div>
          <div class="col-md-10" style="width: 103%;padding-left: 1px !important;">
-        <div class="panel panel-default">
+        <div class="panel panel-default scrollable-panel">
             <div class="panel-heading" id="name">Tags</div>
             <table id="tag_table" class="table table-striped table-hover">
                 <thead>

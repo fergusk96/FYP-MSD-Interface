@@ -3,6 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="http://neo4j-contrib.github.io/developer-resources/language-guides/assets/css/main.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     
 </head>
 
@@ -17,7 +20,7 @@
                     <li>
                         <form role="artistSearch" class="navbar-form" id="artistSearch">
                             <div class="form-group">
-                                <input type="text"  placeholder="Search for Artist" class="form-control" name="artistSearch" value=${name}>
+                                <input type="text"  placeholder="Search for Artist" class="form-control" id='searchBar' name="artistSearch" value=${name}>
                             </div>
                             <button class="btn btn-default" type="submit">Search</button>
                         </form>
@@ -48,7 +51,7 @@
 
 <div class="row">
     <div class="col-md-5">
-        <div class="panel panel-default">
+        <div class="panel panel-default scrollable-panel scrollable-panel">
             <div class="panel-heading">Search Results</div>
             <table id="results" class="table table-striped table-hover">
                 <thead>
@@ -65,7 +68,7 @@
         </div>
     </div>
     <div class="col-md-7">
-        <div class="panel panel-default">
+        <div class="panel panel-default scrollable-panel">
             <div class="panel-heading" id="name">Details</div>
             <table id="song_table" class="table table-striped table-hover">
                 <thead>
@@ -80,6 +83,23 @@
                 </tbody>
             </table>
         </div>
+                     <div class="col-md-10" style="width: 103%;padding-left: 1px !important;">
+        <div class="panel panel-default scrollable-panel">
+            <div class="panel-heading" id="name">Tags</div>
+            <table id="tag_table" class="table table-striped table-hover">
+                <thead>
+                <tr>
+
+                    <th>Tag</th>
+ 
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
     </div>
 </div>
 <style type="text/css">
@@ -109,10 +129,28 @@
                     }, "json");
             return false;
         }
-
+  
+	function showTag(name){
+	        $.get("http://localhost:8080/artist/" + encodeURIComponent(name),
+	             function (data) {
+	                data = data[2]
+	        var r = $("table#tag_table tbody").empty();
+	         if (!data) return;
+	         data[0].Tags.forEach(function (tags) {
+	                        $("<tr><td class='tags'>" + tags.Tag + "</td><</tr>").appendTo(r)
+	                                .click(function() {window.open("/tags/" + ($(this).find("td.tags").text()) ); })                     
+	                        
+	                   });
+	                }, "json");
+	        return false;
+	    }
+        
         function artistSearch() {
             var query=$("#artistSearch").find("input[name=artistSearch]").val();
             query = query.split('+').join(' ');
+            query = query.split('%28').join('(');
+            query = query.split('%29').join(')');   
+            document.getElementById('searchBar').value = query         
             $.get("http://localhost:8080/artistSearch?q=" + encodeURIComponent(query),
                     function (data) {
                         var t = $("table#results tbody").empty();
@@ -120,9 +158,12 @@
                         data.forEach(function (row) {
                             var artist = row.artist;
                             $("<tr><td class='artist'>" + artist.name + "</td></tr>").appendTo(t)
-                                    .click(function() { showArtist($(this).find("td.artist").text());})
+                                    .click(function() { showArtist($(this).find("td.artist").text());
+                                    					showTag($(this).find("td.artist").text());
+                                    })
                         });
                         showArtist(data[0].artist.name);
+                        showTag(data[0].artist.name);
                     }, "json");
             return false;
         }

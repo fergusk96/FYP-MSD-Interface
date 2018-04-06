@@ -1,10 +1,9 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="http://neo4j-contrib.github.io/developer-resources/language-guides/assets/css/main.css">
-
-    <title>Neo4j Movies</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="http://neo4j-contrib.github.io/developer-resources/language-guides/assets/css/main.css">
+    
 </head>
 
 <body>
@@ -18,7 +17,7 @@
                     <li>
                         <form role="albumSearch" class="navbar-form" id="albumSearch">
                             <div class="form-group">
-                                <input type="text" id="searchBar"  placeholder="Search for Movie Title" class="form-control" name="albumSearch" value=${name}>
+                                <input type="text" placeholder="Search for Album" class="form-control" name="albumSearch" id="searchBar" value=${name}>
                             </div>
                             <button class="btn btn-default" type="submit">Search</button>
                         </form>
@@ -35,8 +34,8 @@
                     <div class="brand">MSD Interface</div>
                 </div>
                 <div style="margin-top: 8px;margin-left: 4px;">
-                <a href="/albums" class="btn btn-default" style="background-color: #008cc1;"  >Album</a>
-                <a href="/artists" class="btn btn-default" >Artist</a>
+                <a href="/albums" class="btn btn-default" style="background-color: #008cc1;" >Album</a>
+                <a href="/artists" class="btn btn-default">Artist</a>
                 <a href="/songs" class="btn btn-default" >Song</a>
                 <a href="/tags" class="btn btn-default">Tag/Genre</a>
                 <a href="/similarSongs" class="btn btn-default">Song Recommend</a>
@@ -48,15 +47,16 @@
 </div>
 
 <div class="row">
-    <div class="col-md-7">
-        <div class="panel panel-default">
+    <div class="col-md-5">
+        <div class="panel panel-default scrollable-panel scrollable-panel">
             <div class="panel-heading">Search Results</div>
             <table id="results" class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th>Album</th>
+
+					<th>Album</th>
                     <th>Artist</th>
-                    
+                   
                 </tr>
                 </thead>
                 <tbody>
@@ -64,24 +64,39 @@
             </table>
         </div>
     </div>
-    <div class="col-md-5">
-        <div class="panel panel-default">
-            <div class="panel-heading" id="title">Details</div>
-            <div class="row">
-
-                <table id="album_table" class="table table-striped table-hover">
+    <div class="col-md-7">
+        <div class="panel panel-default scrollable-panel">
+            <div class="panel-heading" id="name">Details</div>
+            <table id="album_table" class="table table-striped table-hover">
                 <thead>
                 <tr>
-                	<th>Cover Art</th>
+
+                    <th>Cover Art</th>
                     <th>Year</th>
-                                     
+                   
                 </tr>
                 </thead>
                 <tbody>
-                
                 </tbody>
-            </div>
+            </table>
         </div>
+                     <div class="col-md-10" style="width: 103%;padding-left: 1px !important;">
+        <div class="panel panel-default scrollable-panel">
+            <div class="panel-heading" id="name">Tags</div>
+            <table id="Song_table" class="table table-striped table-hover">
+                <thead>
+                <tr>
+
+                    <th>Song</th>
+ 
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
     </div>
 </div>
 <style type="text/css">
@@ -112,20 +127,35 @@
 <script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(function () {
- function showAlbum(name) {
-            $.get("http://localhost:8080/album/" + encodeURIComponent(name),
+ function showAlbum(albumName,artistName) {
+            $.get("http://localhost:8080/album/artist/" + encodeURIComponent(albumName) + "/"+encodeURIComponent(artistName),
                     function (data) {
                         var r = $("table#album_table tbody").empty();
-                        albumData = data[0];
-                        imageData = data[1]
+                        imageData = data[0]
                         if (!data) return;
                         $("#name").text(data.name);
                       
                         var mySrc =  "<img src="+imageData.response[0].url+" class='mywell' id='poster' height='140' width='120'>";
                         var $list = $("#crew").empty();
-                        var name = albumData["artist.name"]
                         $("<tr><td>"+mySrc+"</td> <td class='album'>" + imageData.response[imageData.response.length - 1] + "</td></tr>").appendTo(r)
                                     .click(function() {window.open("/albums/" + ($(this).find("td.album").text()) ); })                     
+                        }, "json");
+  
+            return false;
+        }
+         function showSong(albumName,artistName) {
+            $.get("http://localhost:8080/album/artist/" + encodeURIComponent(albumName) + "/"+encodeURIComponent(artistName),
+                    function (data) {
+                        var r = $("table#song_table tbody").empty();
+                        albumData = data[1]
+                        if (!data) return;
+                        $("#name").text(data.name);
+                      
+                       albumData.Songs.forEach(function (songs) {
+       
+                    	$("<tr><td class='songs'>" + songs + "</td></tr>").appendTo(r)
+	                                    .click(function() {window.open("/songs/" + ($(this).find("td.songs").text())); })                     
+                        });
                         }, "json");
   
             return false;
@@ -137,20 +167,21 @@
             query = query.split('+').join(' ');
             query = query.split('%28').join('(');
             query = query.split('%29').join(')');
-            document.getElementById('searchBar').value = query         
-                        
+                                    
             $.get("http://localhost:8080/albumSearch?q=" + encodeURIComponent(query),
                     function (data) {
                           var t = $("table#results tbody").empty();
                         if (!data || data.length == 0) return;
                         data.forEach(function (row) {
                             var album = row.album;
-                            $("<tr><td class='album albumRow'>" + album.name + "</td><td class='albumRow'>" + row["artist.name"] + "</td></tr>").appendTo(t)
-                                    .click(function() { showAlbum($(this).find("td.album").text());})
+                            $("<tr><td class='album albumRow'>" + album.name + "</td><td class='albumRow artist'>" + row["artist.name"] + "</td></tr>").appendTo(t)
+                                    .click(function() { showAlbum($(this).find("td.album").text(),$(this).find("td.artist").text());
+                                    					showSong($(this).find("td.album").text(),$(this).find("td.artist").text());})
                                     	
 
                                 })
-                        showAlbum(data[0].album.name);
+                        showAlbum(data[0].album.name, data[0]['artist.name']);
+                        showSong(data[0].album.name, data[0]['artist.name']);
                     }, "json");
             return false;
         }

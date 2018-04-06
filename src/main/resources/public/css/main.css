@@ -4662,7 +4662,7 @@ a.list-group-item.active:focus .list-group-item-text {
 
 }
 .scrollable-panel{
-  max-height: 580px;
+  max-height: 250px;
   overflow: scroll; 
 }
 .panel-body {
