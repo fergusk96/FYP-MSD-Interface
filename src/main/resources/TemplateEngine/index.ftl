@@ -2,6 +2,10 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="http://neo4j-contrib.github.io/developer-resources/language-guides/assets/css/main.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     
 </head>
 
@@ -39,7 +43,7 @@
 
 <div class="row">
     <div class="col-md-5">
-        <div class="panel panel-default">
+        <div class="panel panel-default scrollable-panel">
             <div class="panel-heading">Search Results</div>
             <table id="results" class="table table-striped table-hover">
                 <thead>
@@ -55,7 +59,7 @@
         </div>
     </div>
     <div class="col-md-7">
-        <div class="panel panel-default">
+        <div class="panel panel-default scrollable-panel">
             <div class="panel-heading" id="title">Details</div>
             <div class="row">
                 <div class="col-sm-4 col-md-4">

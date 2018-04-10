@@ -2,6 +2,10 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="http://neo4j-contrib.github.io/developer-resources/language-guides/assets/css/main.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     
 </head>
 
@@ -114,7 +118,7 @@
             query = query.split('%28').join('(');
             query = query.split('%29').join(')');   
             document.getElementById('searchBar').value = query         
-            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/artistSearch?q=" + encodeURIComponent(query),
+            $.get("http://localhost:8080/artistSearch?q=" + encodeURIComponent(query),
                     function (data) {
                         var t = $("table#results tbody").empty();
                         if (!data || data.length == 0) return;
@@ -142,7 +146,7 @@
     var svg = d3.select("#graph").append("svg")
             .attr("width", "100%").attr("height", "100%")
             .attr("pointer-events", "all");
-    d3.json("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/graph", function(error, graph) {
+    d3.json("http://localhost:8080/graph", function(error, graph) {
 		if (error) return;
 		
         force.nodes(graph.nodes).links(graph.links).start();
