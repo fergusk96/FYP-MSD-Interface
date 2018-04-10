@@ -118,7 +118,7 @@
             query = query.split('%28').join('(');
             query = query.split('%29').join(')');   
             document.getElementById('searchBar').value = query         
-            $.get("http://localhost:8080/artistSearch?q=" + encodeURIComponent(query),
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/artistSearch?q=" + encodeURIComponent(query),
                     function (data) {
                         var t = $("table#results tbody").empty();
                         if (!data || data.length == 0) return;

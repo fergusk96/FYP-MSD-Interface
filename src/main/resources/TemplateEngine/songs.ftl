@@ -245,7 +245,8 @@
             var query=$("#songSearch").find("input[name=songSearch]").val();
             query = query.split('+').join(' ');
             query = query.split('%28').join('(');
-            query = query.split('%29').join(')');   
+            query = query.split('%29').join(')');  
+            query = query.split('%27').join(''');   
             document.getElementById('searchBar').value = query         
             
             $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/songSearch?q=" + encodeURIComponent(query),
