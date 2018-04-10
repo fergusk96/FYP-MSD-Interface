@@ -82,7 +82,7 @@
 <script type="text/javascript">
     $(function () {
         function showMovie(title) {
-            $.get("http://localhost:8080/movie/" + encodeURIComponent(title),
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/movie/" + encodeURIComponent(title),
                     function (data) {
                         if (!data) return;
                         $("#title").text(data.title);
@@ -96,7 +96,7 @@
         }
         function movieSearch() {
             var query=$("#movieSearch").find("input[name=movieSearch]").val();
-            $.get("http://localhost:8080/movieSearch?q=" + encodeURIComponent(query),
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/movieSearch?q=" + encodeURIComponent(query),
                     function (data) {
                         var t = $("table#results tbody").empty();
                         if (!data || data.length == 0) return;

@@ -91,7 +91,7 @@
     $(function () {
 
             function similarArtists(artistName) {
-            $.get("http://localhost:8080/simArtists/" + encodeURIComponent(artistName),
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/simArtists/" + encodeURIComponent(artistName),
                     function (data) {
                         data = data[0].similar_artists;
                         var t = $("table#similar_table tbody").empty();
@@ -114,7 +114,7 @@
             query = query.split('%28').join('(');
             query = query.split('%29').join(')');   
             document.getElementById('searchBar').value = query         
-            $.get("http://localhost:8080/artistSearch?q=" + encodeURIComponent(query),
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/artistSearch?q=" + encodeURIComponent(query),
                     function (data) {
                         var t = $("table#results tbody").empty();
                         if (!data || data.length == 0) return;
@@ -142,7 +142,7 @@
     var svg = d3.select("#graph").append("svg")
             .attr("width", "100%").attr("height", "100%")
             .attr("pointer-events", "all");
-    d3.json("http://localhost:8080/graph", function(error, graph) {
+    d3.json("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/graph", function(error, graph) {
 		if (error) return;
 		
         force.nodes(graph.nodes).links(graph.links).start();

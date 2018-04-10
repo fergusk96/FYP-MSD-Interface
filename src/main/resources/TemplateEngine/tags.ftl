@@ -151,7 +151,7 @@
 	var curSong = "poker face";
 
 	function downloadSegmentsData(type) {
-            $.get("http://localhost:8080/segmentdetails/"+type+"/"+curSong+"/"+curArtist,
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/segmentdetails/"+type+"/"+curSong+"/"+curArtist,
                     function (myData) {
                     	var csv = "";
                         var data,fileName,link;
@@ -181,7 +181,7 @@
         }
 	
 	function downloadData(type) {
-            $.get("http://localhost:8080/songdetails/"+type+"/"+curSong+"/"+curArtist,
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/songdetails/"+type+"/"+curSong+"/"+curArtist,
                     function (myData) {
                     	var csv = "";
                         var data,fileName,link;
@@ -220,7 +220,7 @@
         }
     $(function () {
         function showSong(songTitle,artistName) {
-            $.get("http://localhost:8080/song/artist/" + encodeURIComponent(songTitle)+'/'+encodeURIComponent(artistName),
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/song/artist/" + encodeURIComponent(songTitle)+'/'+encodeURIComponent(artistName),
                     function (data) {
                         data = data[0]
                         var r = $("table#song_table tbody").empty();
@@ -237,7 +237,7 @@
         }
 
         function showTag(songTitle,artistName){
-            $.get("http://localhost:8080/song/artist/" + encodeURIComponent(songTitle)+'/'+encodeURIComponent(artistName),
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/song/artist/" + encodeURIComponent(songTitle)+'/'+encodeURIComponent(artistName),
                  function (data) {
                     data = data[1]
             var r = $("table#tag_table tbody").empty();
@@ -256,7 +256,7 @@
             query = query.split('%28').join('(');
             query = query.split('%29').join(')'); 
             document.getElementById('searchBar').value = query            
-            $.get("http://localhost:8080/tag/"+query,
+            $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/tag/"+query,
                     function (data) {
                           var t = $("table#results tbody").empty();
                         if (!data || data.length == 0) return;
@@ -289,7 +289,7 @@
     var svg = d3.select("#graph").append("svg")
             .attr("width", "100%").attr("height", "100%")
             .attr("pointer-events", "all");
-    d3.json("http://localhost:8080/graph", function(error, graph) {
+    d3.json("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/graph", function(error, graph) {
 		if (error) return;
 		
         force.nodes(graph.nodes).links(graph.links).start();
