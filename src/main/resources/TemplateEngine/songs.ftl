@@ -246,7 +246,7 @@
             query = query.split('+').join(' ');
             query = query.split('%28').join('(');
             query = query.split('%29').join(')'); 
-            query = query.split('%29').join("'");  
+            query = query.split('%27').join("'");  
              
             document.getElementById('searchBar').value = query         
             
