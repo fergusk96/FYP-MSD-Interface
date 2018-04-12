@@ -66,6 +66,21 @@
                 </tbody>
             </table>
         </div>
+    <div class="panel panel-default scrollable-panel scrollable-panel">
+            <div class="panel-heading">Search Results</div>
+            <table id="albums_table" class="table table-striped table-hover">
+                <thead>
+                <tr>
+
+                    
+                    <th>Albums</th>
+                   
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="col-md-7">
         <div class="panel panel-default scrollable-panel">
@@ -144,6 +159,20 @@
 	                }, "json");
 	        return false;
 	    }
+	function showAlbum(name){
+	        $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/artist/" + encodeURIComponent(name),
+	             function (data) {
+	                data = data[1]
+	        var r = $("table#albums_table tbody").empty();
+	         if (!data) return;
+	         data[0].albums.forEach(function (albums) {
+	                        $("<tr><td class='albums'>" + albums.album + "</td><</tr>").appendTo(r)
+	                                .click(function() {window.open("/album/" + ($(this).find("td.albums").text()) ); })                     
+	                        
+	                   });
+	                }, "json");
+	        return false;
+	    }
         
         function artistSearch() {
             var query=$("#artistSearch").find("input[name=artistSearch]").val();
@@ -159,7 +188,9 @@
                             var artist = row.artist;
                             $("<tr><td class='artist'>" + artist.name + "</td></tr>").appendTo(t)
                                     .click(function() { showArtist($(this).find("td.artist").text());
-                                    					showTag($(this).find("td.artist").text());
+                                    			showTag($(this).find("td.artist").text());
+							showAlbum($(this).find("td.artist").text());
+							
                                     })
                         });
                         showArtist(data[0].artist.name);

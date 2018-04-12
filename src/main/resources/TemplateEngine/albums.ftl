@@ -167,9 +167,10 @@
 
         function albumSearch() {
             var query=$("#albumSearch").find("input[name=albumSearch]").val();
-            query = query.split('+').join(' ');
+	    query = query.split('+').join(' ');
             query = query.split('%28').join('(');
-            query = query.split('%29').join(')');
+            query = query.split('%29').join(')');   
+            document.getElementById('searchBar').value = query
                                     
             $.get("http://ec2-34-241-1-61.eu-west-1.compute.amazonaws.com:8080/albumSearch?q=" + encodeURIComponent(query),
                     function (data) {
