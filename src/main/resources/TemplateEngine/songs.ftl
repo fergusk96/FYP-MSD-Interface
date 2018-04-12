@@ -240,7 +240,7 @@
                        });
                     }, "json");
             return false;
-        }
+        } 
         function songSearch() {
             var query=$("#songSearch").find("input[name=songSearch]").val();
             query = query.split('+').join(' ');

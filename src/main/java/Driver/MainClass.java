@@ -3,7 +3,7 @@ package Driver;
 
 import static spark.Spark.get;
 import static spark.Spark.staticFileLocation;
-
+import static spark.Spark.port;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +36,7 @@ public class MainClass {
     	 * The rest of the routes work in virtually the same manner
 		*/
     	
+    	port(8081);
         get("/", (request, response) -> {
            Map<String, Object> argumentsMap = new HashMap<String, Object>();
            argumentsMap.put("title", "Search_here.."); 
